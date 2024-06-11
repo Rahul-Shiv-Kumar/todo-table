@@ -111,6 +111,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     } else {
       card.style.backgroundColor = '#ffffff';
+      card.style.color = '#000';
     }
   }
 });
