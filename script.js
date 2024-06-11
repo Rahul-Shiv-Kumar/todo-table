@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     savedState.forEach((pane, paneIndex) => {
       const paneElement = document.getElementById(`pane-${paneIndex}`);
       pane.cards.forEach(cardText => {
-        const cardElement = createCardElement(cardText);
+        const cardElement = createCardElement(cardText, paneIndex);
         paneElement.appendChild(cardElement);
       });
     });
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     initialState.forEach((pane, paneIndex) => {
       const paneElement = document.getElementById(`pane-${paneIndex}`);
       pane.cards.forEach(cardText => {
-        const cardElement = createCardElement(cardText);
+        const cardElement = createCardElement(cardText, paneIndex);
         paneElement.appendChild(cardElement);
       });
     });
@@ -50,6 +50,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
         pane.insertBefore(draggedCard, afterElement);
       }
     });
+
+    pane.addEventListener('drop', (e) => {
+      updateCardColor(draggedCard, pane.id);
+      saveState();
+    });
   });
 
   function getDragAfterElement(container, y) {
@@ -66,11 +71,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
     }, { offset: Number.NEGATIVE_INFINITY }).element;
   }
 
-  function createCardElement(text) {
+  function createCardElement(text, paneIndex) {
     const card = document.createElement('div');
     card.classList.add('pane-card');
     card.draggable = true;
     card.textContent = text;
+    updateCardColor(card, `pane-${paneIndex}`);
 
     card.addEventListener('dragstart', (e) => {
       draggedCard = card;
@@ -93,5 +99,18 @@ document.addEventListener('DOMContentLoaded', (event) => {
       panesState.push({ name: pane.querySelector('.pane-header').textContent, cards: cards });
     });
     localStorage.setItem('panesState', JSON.stringify(panesState));
+  }
+
+  function updateCardColor(card, paneId) {
+    if (paneId === 'pane-1') {
+      card.style.backgroundColor = 'green';
+      card.style.color = '#fff';
+    } else if (paneId === 'pane-2') {
+      card.style.backgroundColor = 'blue';
+      card.style.color = '#fff';
+
+    } else {
+      card.style.backgroundColor = '#ffffff';
+    }
   }
 });
